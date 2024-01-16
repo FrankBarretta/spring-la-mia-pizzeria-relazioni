@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/resources :: head('Pizza list')"></head>
+<body>
+<!-- fragment navbar -->
+<nav th:replace="fragments/navbar :: topNavbar('pizzas')"></nav>
+
+<div class="container">
+    <div  th:if="${redirectMessage != null}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <p th:text="${redirectMessage}"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <h1>Pizza list</h1>
+    <div class="alert alert-info" th:if="${pizzaList.size() == 0}">There are no pizzas</div>
+    <table class="table" th:unless="${pizzaList.size() == 0}">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price &euro;</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pizza : ${pizzaList}">
+            <th scope="row" th:text="${pizza.id}"></th>
+            <td th:text="${pizza.name}"></td>
+            <td th:text="${pizza.description}"></td>
+            <td th:text="${pizza.price}"></td>
+            <td class="d-flex justify-content-between">
+                <a class="btn btn-primary" th:href="@{/pizzas/show/{id}(id=${pizza.id})}"><i class="fa-solid fa-eye"></i></a>
+                <a class="btn btn-primary" th:href="@{/pizzas/edit/{id}(id=${pizza.id})}"><i class="fa-solid fa-pencil"></i></a>
+                <form th:action="@{/pizzas/delete/{id}(id=${pizza.id})}" method="post"
+                      onsubmit="return confirm('Are you sure, yo want to delete this pizza?')">
+                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="mt-3">
+        <a class="btn btn-primary" th:href="@{pizzas/create}">Add pizza</a>
+    </div>
+</div>
+
+<th:block th:replace="fragments/resources :: script"></th:block>
+</body>
+</html>
